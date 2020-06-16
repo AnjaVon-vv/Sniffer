@@ -13,15 +13,13 @@ class Widget : public QWidget
     Q_OBJECT
 
 public:
+    Ui::Widget *ui;
     Widget(QWidget *parent = nullptr);
     ~Widget();
-    static void callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *packet);
-    int mainSniffer();
+    int prepareSniffer();
+    void startSniffer(int num);
     void stopSniffer();
-    int print(const char *format,...);
 
-private:
-    Ui::Widget *ui;
-    QProcess *qp;
 };
+
 #endif // WIDGET_H

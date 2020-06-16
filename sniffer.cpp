@@ -14,14 +14,14 @@
 #define PROM 1
 //promiscuous mode
 
-char filter[128]; //过滤条件
-char *dev; //抓包设备
+extern char filter[128]; //过滤条件
+extern char *dev; //抓包设备
 
-int flowTotal = 0; //总流量计数
-int ipv4Flow = 0, ipv6Flow = 0, arpFlow = 0, rarpFlow = 0, pppFlow = 0;
-int ipv4Cnt = 0, ipv6Cnt = 0, arpCnt = 0, rarpCnt = 0, pppCnt = 0;
-int tcpFlow = 0, udpFlow = 0, icmpFlow = 0;
-int tcpCnt = 0, udpCnt = 0, icmpCnt = 0;
+extern int flowTotal; //总流量计数
+extern int ipv4Flow, ipv6Flow, arpFlow, rarpFlow, pppFlow;
+extern int ipv4Cnt, ipv6Cnt, arpCnt, rarpCnt, pppCnt;
+extern int tcpFlow, udpFlow, icmpFlow;
+extern int tcpCnt, udpCnt, icmpCnt;
 
 
 //以太网解析
@@ -82,11 +82,15 @@ void callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *pack
     {
         printf("PPPOE Discovery");
         analyze.pppAnalyze(arg, pcapPkt, packet);
+        pppCnt ++;
+        pppFlow += flow;
     }
     if(protocol == 0x8864)
     {
         printf("PPPOE Session");
         analyze.pppAnalyze(arg, pcapPkt, packet);
+        pppCnt ++;
+        pppFlow += flow;
     }
 
     printf("************ 网络层 ************\n");
@@ -129,7 +133,7 @@ void callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *pack
 }
 
 
-pcap_t *pcap;
+extern pcap_t *pcap;
 //嗅探准备
 int sniffer::prepareSniffer()
 {
@@ -149,7 +153,7 @@ int sniffer::prepareSniffer()
 
     //打开
     pcap = pcap_open_live(dev, snapLen, PROM, 0, errbuf);
-    if(pcap == NULL)
+    if(pcap == nullptr)
     {
         printf("Open error!\n");
         return -1;
@@ -183,9 +187,7 @@ int sniffer::prepareSniffer()
     }
 
 //    int id = 0;
-
-//    //-1 循环抓取，出错停止
-//    pcap_loop(pcap, 20, callback, (u_char *) &id);
+//    pcap_loop(pcap, 20, callback, (u_char *) &id); //-1 循环抓取，出错停止
 
 //    pcap_close(pcap);
 
@@ -193,10 +195,10 @@ int sniffer::prepareSniffer()
 }
 
 //抓取数据包，传入抓取数量
+//-1 循环抓取，出错停止
 void sniffer::startSniffer(int num)
 {
     int id = 0;
-    //-1 循环抓取，出错停止
     pcap_loop(pcap, num, callback, (u_char *) &id);
 
     pcap_close(pcap);
@@ -208,17 +210,16 @@ void sniffer::stopSniffer()
     pcap_breakloop(pcap);
 }
 
-
-int main()
-{
-    sniffer s;
-    s.prepareSniffer();
-    s.startSniffer(20);
-    printf("Total flow: %d", flowTotal);
-    printf("IPv4 flow: %d, ARP flow: %d, IPv6 flow: %d, RARP flow: %d, PPP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
-    printf("IPv4 Cnt: %d, ARP Cnt: %d, IPv6 Cnt: %d, RARP Cnt: %d, PPP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
-    printf("TCP flow: %d, UDP flow: %d, ICMP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
-    printf("TCP Cnt: %d, UDP Cnt: %d, ICMP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
-    return 0;
-}
-
+////嗅探测试主函数
+//int main()
+//{
+//    sniffer s;
+//    if(s.prepareSniffer() == 0)
+//        s.startSniffer(20);
+//    printf("Total flow: %d", flowTotal);
+//    printf("IPv4 flow: %d, ARP flow: %d, IPv6 flow: %d, RARP flow: %d, PPP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
+//    printf("IPv4 Cnt: %d, ARP Cnt: %d, IPv6 Cnt: %d, RARP Cnt: %d, PPP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
+//    printf("TCP flow: %d, UDP flow: %d, ICMP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
+//    printf("TCP Cnt: %d, UDP Cnt: %d, ICMP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
+//    return 0;
+//}
