@@ -62,6 +62,7 @@ void Widget::callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_ch
     wg.ui->treeWidget->addTopLevelItem(a);
 //    QTreeWidgetItem *twi = new QTreeWidgetItem(QStringList() << QString::number(++(*id), 10) << QString("packet length: %1\n number of bytes: %2\n receive time: %3\n").arg(pcapPkt -> len).arg(pcapPkt -> caplen).arg(time));
 //    wg.ui->treeWidget->addTopLevelItem(twi);
+    emit QString aa = "aaa";
     QApplication::processEvents();
 
     printf("id: %d\n", *id);

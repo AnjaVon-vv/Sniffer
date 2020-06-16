@@ -18,11 +18,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     analyze.cpp \
     main.cpp \
+    sniffer.cpp \
     widget.cpp
 
 HEADERS += \
     analyze.h \
     protocol.h \
+    sniffer.h \
     widget.h
 
 FORMS += \

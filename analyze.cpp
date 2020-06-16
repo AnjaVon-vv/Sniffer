@@ -12,7 +12,8 @@
 
 extern char filter[128]; //过滤条件
 extern char *dev; //抓包设备
-
+extern int tcpFlow, udpFlow, icmpFlow;
+extern int tcpCnt, udpCnt, icmpCnt;
 
 //pppoe协议头分析
 void analyze::pppAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *packet)
@@ -141,10 +142,10 @@ void analyze::ipAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_
 
     printf("IP source: ");
     for(int i = 0; i < ipAddr; i++)
-        printf("%d", ipHead -> ipS[i]);
+        printf("%d.", ipHead -> ipS[i]);
     printf("\nIP destination: ");
     for(int i = 0; i < ipAddr; i++)
-        printf("%d", ipHead -> ipD[i]);
+        printf("%d.", ipHead -> ipD[i]);
     printf("\n");
 
     u_char protocol = ipHead -> ipProtocol;
@@ -152,20 +153,26 @@ void analyze::ipAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_
     {
         printf("#######ICMP!\n");
         icmpAnalyze(arg, pcapPkt, packet);
+        icmpCnt ++;
+        icmpFlow += pcapPkt->caplen;
     }
 
 
-    printf("************** 传输层 **************");
+    printf("************** 传输层 **************\n");
     printf("~~~~~~~transport layer~~~~~~~\n");
     switch (protocol)
     {
         case 0x06:
             printf("#######TCP!\n");
             tcpAnalyze(arg, pcapPkt, packet);
+            tcpFlow += pcapPkt->caplen;
+            tcpCnt ++;
             break;
         case 0x11:
             printf("#######UDP!\n");
             udpAnalyze(arg, pcapPkt, packet);
+            udpFlow += pcapPkt->caplen;
+            udpCnt ++;
             break;
         case 0x02:
             printf("#######IGMP!\n");

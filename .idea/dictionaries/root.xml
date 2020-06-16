@@ -5,6 +5,7 @@
       <w>icmp</w>
       <w>pcap</w>
       <w>pppoe</w>
+      <w>rarp</w>
     </words>
   </dictionary>
 </component>

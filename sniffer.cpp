@@ -14,8 +14,14 @@
 #define PROM 1
 //promiscuous mode
 
-extern char filter[128]; //过滤条件
-extern char *dev; //抓包设备
+char filter[128]; //过滤条件
+char *dev; //抓包设备
+
+int flowTotal = 0; //总流量计数
+int ipv4Flow = 0, ipv6Flow = 0, arpFlow = 0, rarpFlow = 0, pppFlow = 0;
+int ipv4Cnt = 0, ipv6Cnt = 0, arpCnt = 0, rarpCnt = 0, pppCnt = 0;
+int tcpFlow = 0, udpFlow = 0, icmpFlow = 0;
+int tcpCnt = 0, udpCnt = 0, icmpCnt = 0;
 
 
 //以太网解析
@@ -28,13 +34,16 @@ void callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *pack
     u_int *id = (u_int *)arg;
     char *time = ctime((const time_t*)&pcapPkt -> ts.tv_sec);
 
-    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    int flow = pcapPkt -> caplen;
+    flowTotal += flow;
+
+    printf("#########################################\n");
     printf("~~~~~~~~~~~~~device: %s~~~~~~~~~~~~~\n", dev);
     printf("~~~~~~~~~~~~~filter: %s~~~~~~~~~~~~~\n", filter);
     printf("~~~~~~~~~~~~~analyze information~~~~~~~~~~~~~\n");
     printf("id: %d\n", ++(*id));
     printf("packet length: %d\n", pcapPkt -> len);
-    printf("number of bytes: %d\n", pcapPkt -> caplen);
+    printf("number of bytes: %d\n", flow);
     printf("receive time: %s\n", time);
 
     for(int i = 0; i < pcapPkt->len; i++)
@@ -87,32 +96,42 @@ void callback(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_char *pack
         case 0x0800:
             printf("#######IPv4!\n");
             analyze.ipAnalyze(arg, pcapPkt, packet);
+            ipv4Flow += flow;
+            ipv4Cnt ++;
             break;
         case 0x0806:
             printf("#######ARP!\n");
             analyze.arpAnalyze(arg, pcapPkt, packet);
+            arpFlow += flow;
+            arpCnt ++;
             break;
         case 0x0835:
             printf("#######RARP!\n");
+            rarpFlow += flow;
+            rarpCnt ++;
             break;
         case 0x08DD:
             printf("#######IPv6!\n");
+            ipv6Flow += flow;
+            ipv6Cnt ++;
             break;
         case 0x880B:
             printf("#######PPP!\n");
+            pppFlow += flow;
+            pppCnt ++;
             break;
         default:
             printf("Other network layer protocol!\n");
             break;
     }
     printf("~~~~~~~~~~~~~Done~~~~~~~~~~~~~\n");
-    printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n");
+    printf("#########################################\n\n\n");
 }
 
 
 pcap_t *pcap;
-//嗅探主函数
-int sniffer::mainSniffer()
+//嗅探准备
+int sniffer::prepareSniffer()
 {
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_if_t *allDev;
@@ -163,18 +182,43 @@ int sniffer::mainSniffer()
         return -2;
     }
 
-    int id = 0;
+//    int id = 0;
 
-    //-1 循环抓取，出错停止
-    pcap_loop(pcap, 20, callback, (u_char *) &id);
+//    //-1 循环抓取，出错停止
+//    pcap_loop(pcap, 20, callback, (u_char *) &id);
 
-    pcap_close(pcap);
+//    pcap_close(pcap);
 
     return 0;
 }
 
+//抓取数据包，传入抓取数量
+void sniffer::startSniffer(int num)
+{
+    int id = 0;
+    //-1 循环抓取，出错停止
+    pcap_loop(pcap, num, callback, (u_char *) &id);
+
+    pcap_close(pcap);
+}
+
+//停止循环
 void sniffer::stopSniffer()
 {
-    pcap_close(pcap);
+    pcap_breakloop(pcap);
+}
+
+
+int main()
+{
+    sniffer s;
+    s.prepareSniffer();
+    s.startSniffer(20);
+    printf("Total flow: %d", flowTotal);
+    printf("IPv4 flow: %d, ARP flow: %d, IPv6 flow: %d, RARP flow: %d, PPP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
+    printf("IPv4 Cnt: %d, ARP Cnt: %d, IPv6 Cnt: %d, RARP Cnt: %d, PPP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
+    printf("TCP flow: %d, UDP flow: %d, ICMP flow: %d\n", ipv4Flow, arpFlow, ipv6Flow, rarpFlow, pppFlow);
+    printf("TCP Cnt: %d, UDP Cnt: %d, ICMP Cnt: %d\n", ipv4Cnt, arpCnt, ipv6Cnt, rarpCnt, pppCnt);
+    return 0;
 }
 

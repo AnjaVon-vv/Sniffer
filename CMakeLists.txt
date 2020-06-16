@@ -3,5 +3,5 @@ project(Sniffer)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Sniffer sniffer.cpp protocol.h analyze.cpp analyze.h)
+add_executable(Sniffer protocol.h analyze.cpp analyze.h sniffer.cpp sniffer.h)
 target_link_libraries(Sniffer pcap)
