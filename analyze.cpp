@@ -306,8 +306,8 @@ QString analyze::ipAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const
     sprintf(tmp, "Identification: %d\n", ipHead -> ipId);
     res += tmp;
 
-    printf("Offset: %d\n", ipHead -> ipOffset);
-    sprintf(tmp, "Offset: %d\n", ipHead -> ipOffset);
+    printf("Offset: %d\n", ipHead -> ipOffset & 0x1fff);
+    sprintf(tmp, "Offset: %d\n", ipHead -> ipOffset & 0x1fff);
     res += tmp;
 
     printf("Time to Live: %d\n", ipHead -> ipTtl);

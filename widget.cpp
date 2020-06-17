@@ -29,6 +29,7 @@ int ipv4Flow = 0, ipv6Flow = 0, arpFlow = 0, rarpFlow = 0, pppFlow = 0;
 int ipv4Cnt = 0, ipv6Cnt = 0, arpCnt = 0, rarpCnt = 0, pppCnt = 0;
 int tcpFlow = 0, udpFlow = 0, icmpFlow = 0;
 int tcpCnt = 0, udpCnt = 0, icmpCnt = 0;
+int otherCnt = 0, otherFlow = 0;
 
 //font color
 QString errClr = "de7e73";
@@ -193,6 +194,8 @@ void ethernetAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_cha
     default:
         printf("Other network layer protocol!\n");
         res += "Other network layer protocol!\n";
+        otherCnt ++;
+        otherFlow += flow;
         break;
     }
     if(!res.isEmpty())
@@ -208,12 +211,12 @@ void ethernetAnalyze(u_char *arg, const struct pcap_pkthdr *pcapPkt, const u_cha
 
 
 pcap_t *pcap;
-bpf_u_int32 net;
-//嗅探准备
-int Widget::prepareSniffer()
+//抓取数据包，传入抓取数量+时间
+void Widget::Sniffer(int num, int ms)
 {
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_if_t *allDev;
+    bpf_u_int32 net;
     bpf_u_int32 mask;
 
 
@@ -223,7 +226,78 @@ int Widget::prepareSniffer()
     {
         ui->textBrowser->append(QString("<font color=\"#%1\"> No device has been found! </font>").arg(errClr));
         printf("No device has been found! \n");
-        return -1;
+    }
+    dev = allDev -> name;
+    ui->textBrowser->append(QString("Find the deveice: <font color=\"#%1\"> %2 </font>\n").arg(highClr).arg(dev));
+
+    /*硬编码    dev = "eth0";*/
+
+    //打开设备网络
+    ui->textBrowser->append("Opening the device ......");
+    pcap = pcap_open_live(dev, snapLen, PROM, ms, errbuf);
+    if(pcap == nullptr)
+    {
+        ui->textBrowser->insertPlainText(QString("<font color=\"#%1\"> Open error: </font>").arg(errClr));
+        ui->textBrowser->append(errbuf);
+        printf("Open error: %s\n", errbuf);
+    }
+    ui->textBrowser->append("Device opened!\n");
+
+    if(pcap_lookupnet(dev, &net, &mask, errbuf) == -1)
+    {
+        ui->textBrowser->insertPlainText(QString("<font color=\"#%1\"> Could not found netmask for device %2! </font>").arg(errClr).arg(dev));
+        printf("Could not found netmask for device %s!\n", dev);
+        net = 0;
+        mask = 0;
+    }
+
+    QApplication::processEvents();
+
+    struct bpf_program bp;
+    //读取过滤条件
+    if(!ui->filterLine->text().isEmpty())
+    {
+        strcpy(filter, ui->filterLine->text().toStdString().data());
+        if(pcap_compile(pcap, &bp, filter, 0, net) == -1) //编译
+        {
+            printf("Could not parse filter!\n");
+            ui->textBrowser->append(QString("<font color=\"#%1\"> Could not parse filter! </font>").arg(errClr));
+            exit(-2);
+        }
+        if(pcap_setfilter(pcap, &bp) == -1) //安装
+        {
+            printf("Could not install filter!\n");
+            ui->textBrowser->append(QString("<font color=\"#%1\"> Could not install filter! </font>").arg(errClr));
+            exit(-2);
+        }
+    }
+
+    //开始抓取
+    ui->textBrowser->append("Snaping ... ...\n");
+    QApplication::processEvents();
+    pcap_dispatch(pcap, num, ethernetAnalyze, (u_char *) ui);
+
+    //关闭设备
+    pcap_close(pcap);
+    ui->textBrowser->append(QString("<font color=\"#%1\"> Snap over! </font>\n").arg(highClr));
+}
+
+
+//抓取数据包，传入抓取数量
+void Widget::startSniffer(int num)
+{
+    char errbuf[PCAP_ERRBUF_SIZE];
+    pcap_if_t *allDev;
+    bpf_u_int32 net;
+    bpf_u_int32 mask;
+
+
+    //获取
+    ui->textBrowser->append("Finding deveice ......");
+    if(pcap_findalldevs(&allDev, errbuf) == -1)
+    {
+        ui->textBrowser->append(QString("<font color=\"#%1\"> No device has been found! </font>").arg(errClr));
+        printf("No device has been found! \n");
     }
     dev = allDev -> name;
     ui->textBrowser->append(QString("Find the deveice: <font color=\"#%1\"> %2 </font>\n").arg(highClr).arg(dev));
@@ -238,7 +312,6 @@ int Widget::prepareSniffer()
         ui->textBrowser->insertPlainText(QString("<font color=\"#%1\"> Open error: </font>").arg(errClr));
         ui->textBrowser->append(errbuf);
         printf("Open error: %s\n", errbuf);
-        return -1;
     }
     ui->textBrowser->append("Device opened!\n");
 
@@ -251,35 +324,32 @@ int Widget::prepareSniffer()
     }
 
     QApplication::processEvents();
-    return 0;
-}
 
-
-//抓取数据包，传入抓取数量
-//-1 循环抓取，出错停止
-void Widget::startSniffer(int num)
-{
     struct bpf_program bp;
     //读取过滤条件
     if(!ui->filterLine->text().isEmpty())
     {
         strcpy(filter, ui->filterLine->text().toStdString().data());
-        if(pcap_compile(pcap, &bp, filter, 0, net) == -1)
+        if(pcap_compile(pcap, &bp, filter, 0, net) == -1) //编译
         {
             printf("Could not parse filter!\n");
+            ui->textBrowser->append(QString("<font color=\"#%1\"> Could not parse filter! </font>").arg(errClr));
             exit(-2);
         }
-        if(pcap_setfilter(pcap, &bp) == -1)
+        if(pcap_setfilter(pcap, &bp) == -1) //安装
         {
             printf("Could not install filter!\n");
+            ui->textBrowser->append(QString("<font color=\"#%1\"> Could not install filter! </font>").arg(errClr));
             exit(-2);
         }
     }
 
+    //开始抓取
     ui->textBrowser->append("Snaping ... ...\n");
     QApplication::processEvents();
     pcap_loop(pcap, num, ethernetAnalyze, (u_char *) ui);
 
+    //关闭设备
     pcap_close(pcap);
     ui->textBrowser->append(QString("<font color=\"#%1\"> Snap over! </font>\n").arg(highClr));
 }
@@ -299,17 +369,27 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
 
     ui->inputLineEdit->setValidator(new QIntValidator(-1, 1000, this));
+    ui->timeLine->setValidator(new QIntValidator(-1, 1000, this));
 
-    if(prepareSniffer() != 0)
-        exit(-3);
 
     //开始嗅探
     connect(ui->startBtn, &QPushButton::clicked, this, [=](){
         ui->textBrowser->append(QString("<font color=\"#%1\"> Start sniffing! </font>").arg(highClr));
-        if(ui->inputLineEdit->text().isEmpty())
-            startSniffer(-1);
+
+        if(ui->timeLine->text().isEmpty())
+        {
+            if(ui->inputLineEdit->text().isEmpty())
+                startSniffer(-1);
+            else
+                startSniffer(ui->inputLineEdit->text().toInt());
+        }
         else
-            startSniffer(ui->inputLineEdit->text().toInt());
+        {
+            if(ui->inputLineEdit->text().isEmpty())
+                Sniffer(-1, ui->timeLine->text().toInt());
+            else
+                Sniffer(ui->inputLineEdit->text().toInt(), ui->timeLine->text().toInt());
+        }
 
         ui->flowLine->setText(QString::number(flowTotal, 10));
         QStringList cntList, flowList;
@@ -330,8 +410,14 @@ Widget::Widget(QWidget *parent)
 
     //清屏
     connect(ui->clrB, &QPushButton::clicked, this, [=](){ui->textBrowser->clear();});
-    connect(ui->clrF, &QPushButton::clicked, this, [=](){ui->tableWidget->clearContents();});
-    connect(ui->clrT, &QPushButton::clicked, this, [=](){ui->treeWidget->clear();});
+    connect(ui->clrF, &QPushButton::clicked, this, [=](){
+        ui->tableWidget->clearContents();
+        ui->flowLine->clear();
+    });
+    connect(ui->clrT, &QPushButton::clicked, this, [=](){
+        ui->treeWidget->clear();
+        id = 0;
+    });
 
     //table widget
     ui->tableWidget->setColumnCount(2);

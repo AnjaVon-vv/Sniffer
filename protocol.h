@@ -13,16 +13,9 @@
 #define snapLen 1518
 //最大抓包长度
 // Ethernet 1500字节 + 以太网帧头部14字节 + 以太网帧尾部4字节
-#define ethernetHead 14
-//以太网头 14B
-#define ethernetAddr 6
-//以太网地址 6B
 
-#define ipHead(packet) ((((struct ip *)(packet + ethernetHead)) -> ipHV & 0x0f) * 4)
-//ip头字节数
-// 取低4位即头部长度，单位4B，强转ip结构体
-#define ipAddr 4
-//ip地址 4B
+
+
 
 #define arpRequest 1
 #define arpReply 2
@@ -38,6 +31,10 @@
 #define tcpCWR 0x80
 
 
+#define ethernetHead 14
+//以太网头 14B
+#define ethernetAddr 6
+//以太网地址 6B
 struct ethernet
 {
     u_char etherHostD[ethernetAddr];
@@ -45,6 +42,11 @@ struct ethernet
     u_short etherType;
 };
 
+#define ipHead(packet) ((((struct ip *)(packet + ethernetHead)) -> ipHV & 0x0f) * 4)
+//ip头字节数
+// 取低4位即头部长度，单位4B，强转ip结构体
+#define ipAddr 4
+//ip地址 4B
 struct ip
 {
     u_char ipHV; //Head Length + Version
@@ -54,7 +56,7 @@ struct ip
     u_short ipLen;
     u_short ipId;
     u_short ipOffset;
-    u_char ipTtl;
+    u_char ipTtl; //time to live
     u_char ipProtocol;
     u_char ipCkSum;
     u_char ipS[ipAddr]; //source
@@ -64,7 +66,7 @@ struct ip
 struct tcp
 {
     u_short tcpS; //source port
-    u_short tcpD; //destination port
+    u_short tcpD; //destination portS
     u_int tcpSeq;
     u_int tcpAck;
     u_char tcpHR; //Head Length + Reserved

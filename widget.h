@@ -16,7 +16,7 @@ public:
     Ui::Widget *ui;
     Widget(QWidget *parent = nullptr);
     ~Widget();
-    int prepareSniffer();
+    void Sniffer(int num, int ms);
     void startSniffer(int num);
     void stopSniffer();
 

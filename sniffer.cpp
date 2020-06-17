@@ -4,7 +4,6 @@
 //
 
 #include <cstdio>
-#include <cstring>
 #include <ctime>
 #include <pcap.h>
 #include "sniffer.h"

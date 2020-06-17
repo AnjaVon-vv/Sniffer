@@ -39,23 +39,27 @@ public:
     QTextBrowser *textBrowser;
     QWidget *widgetSniffer;
     QGridLayout *gridLayout_2;
-    QWidget *widget_3;
-    QVBoxLayout *verticalLayout_4;
-    QLabel *label_8;
-    QLineEdit *filterLine;
-    QSpacerItem *verticalSpacer;
+    QSpacerItem *horizontalSpacer;
+    QToolButton *startBtn;
     QWidget *widget_2;
     QVBoxLayout *verticalLayout_3;
     QLabel *label_4;
     QLineEdit *inputLineEdit;
-    QToolButton *startBtn;
-    QSpacerItem *horizontalSpacer;
+    QWidget *widget_4;
+    QGridLayout *gridLayout_4;
+    QLabel *label_9;
+    QLineEdit *timeLine;
+    QLabel *label_2;
+    QToolButton *stopBtn;
+    QWidget *widget_3;
+    QVBoxLayout *verticalLayout_4;
+    QLabel *label_8;
+    QLineEdit *filterLine;
     QWidget *widgetClearBtn;
     QVBoxLayout *verticalLayout;
     QPushButton *clrB;
     QPushButton *clrF;
     QPushButton *clrT;
-    QToolButton *stopBtn;
     QWidget *widgetStatus_2;
     QGridLayout *gridLayout_3;
     QWidget *widget;
@@ -137,57 +141,41 @@ public:
         widgetSniffer->setMinimumSize(QSize(0, 370));
         gridLayout_2 = new QGridLayout(widgetSniffer);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        widget_3 = new QWidget(widgetSniffer);
-        widget_3->setObjectName(QString::fromUtf8("widget_3"));
-        verticalLayout_4 = new QVBoxLayout(widget_3);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        label_8 = new QLabel(widget_3);
-        label_8->setObjectName(QString::fromUtf8("label_8"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        horizontalSpacer = new QSpacerItem(30, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        gridLayout_2->addItem(horizontalSpacer, 0, 1, 1, 1);
+
+        startBtn = new QToolButton(widgetSniffer);
+        startBtn->setObjectName(QString::fromUtf8("startBtn"));
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy3.setHorizontalStretch(0);
         sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
-        label_8->setSizePolicy(sizePolicy3);
-        label_8->setStyleSheet(QString::fromUtf8("color: rgb(255,255,243);"));
+        sizePolicy3.setHeightForWidth(startBtn->sizePolicy().hasHeightForWidth());
+        startBtn->setSizePolicy(sizePolicy3);
+        startBtn->setCursor(QCursor(Qt::PointingHandCursor));
+        startBtn->setStyleSheet(QString::fromUtf8("color: rgb(165, 147, 224);\n"
+"font: 75 23pt \"URW Bookman L\";"));
 
-        verticalLayout_4->addWidget(label_8);
-
-        filterLine = new QLineEdit(widget_3);
-        filterLine->setObjectName(QString::fromUtf8("filterLine"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(filterLine->sizePolicy().hasHeightForWidth());
-        filterLine->setSizePolicy(sizePolicy4);
-        filterLine->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 243);\n"
-"background-color: rgb(51, 51, 51);"));
-        filterLine->setMaxLength(20);
-        filterLine->setCursorPosition(0);
-
-        verticalLayout_4->addWidget(filterLine);
-
-        verticalSpacer = new QSpacerItem(20, 100, QSizePolicy::Minimum, QSizePolicy::Fixed);
-
-        verticalLayout_4->addItem(verticalSpacer);
-
-
-        gridLayout_2->addWidget(widget_3, 1, 0, 2, 1);
+        gridLayout_2->addWidget(startBtn, 0, 2, 2, 1);
 
         widget_2 = new QWidget(widgetSniffer);
         widget_2->setObjectName(QString::fromUtf8("widget_2"));
-        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(widget_2->sizePolicy().hasHeightForWidth());
-        widget_2->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(widget_2->sizePolicy().hasHeightForWidth());
+        widget_2->setSizePolicy(sizePolicy4);
         widget_2->setMinimumSize(QSize(0, 70));
         widget_2->setMaximumSize(QSize(16777215, 70));
         verticalLayout_3 = new QVBoxLayout(widget_2);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
         label_4 = new QLabel(widget_2);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        sizePolicy3.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
-        label_4->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
+        label_4->setSizePolicy(sizePolicy5);
         label_4->setStyleSheet(QString::fromUtf8("color: rgb(255,255,243);"));
 
         verticalLayout_3->addWidget(label_4);
@@ -207,65 +195,43 @@ public:
         verticalLayout_3->addWidget(inputLineEdit);
 
 
-        gridLayout_2->addWidget(widget_2, 0, 0, 1, 1);
+        gridLayout_2->addWidget(widget_2, 1, 0, 1, 1);
 
-        startBtn = new QToolButton(widgetSniffer);
-        startBtn->setObjectName(QString::fromUtf8("startBtn"));
-        QSizePolicy sizePolicy7(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy7.setHorizontalStretch(0);
-        sizePolicy7.setVerticalStretch(0);
-        sizePolicy7.setHeightForWidth(startBtn->sizePolicy().hasHeightForWidth());
-        startBtn->setSizePolicy(sizePolicy7);
-        startBtn->setCursor(QCursor(Qt::PointingHandCursor));
-        startBtn->setStyleSheet(QString::fromUtf8("color: rgb(165, 147, 224);\n"
-"font: 75 23pt \"URW Bookman L\";"));
+        widget_4 = new QWidget(widgetSniffer);
+        widget_4->setObjectName(QString::fromUtf8("widget_4"));
+        sizePolicy4.setHeightForWidth(widget_4->sizePolicy().hasHeightForWidth());
+        widget_4->setSizePolicy(sizePolicy4);
+        widget_4->setMinimumSize(QSize(0, 70));
+        widget_4->setMaximumSize(QSize(16777215, 70));
+        gridLayout_4 = new QGridLayout(widget_4);
+        gridLayout_4->setObjectName(QString::fromUtf8("gridLayout_4"));
+        label_9 = new QLabel(widget_4);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+        sizePolicy5.setHeightForWidth(label_9->sizePolicy().hasHeightForWidth());
+        label_9->setSizePolicy(sizePolicy5);
+        label_9->setStyleSheet(QString::fromUtf8("color: rgb(255,255,243);"));
 
-        gridLayout_2->addWidget(startBtn, 0, 2, 1, 1);
+        gridLayout_4->addWidget(label_9, 0, 0, 1, 2);
 
-        horizontalSpacer = new QSpacerItem(30, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+        timeLine = new QLineEdit(widget_4);
+        timeLine->setObjectName(QString::fromUtf8("timeLine"));
+        sizePolicy6.setHeightForWidth(timeLine->sizePolicy().hasHeightForWidth());
+        timeLine->setSizePolicy(sizePolicy6);
+        timeLine->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 243);\n"
+"background-color: rgb(51, 51, 51);"));
+        timeLine->setMaxLength(20);
+        timeLine->setCursorPosition(0);
 
-        gridLayout_2->addItem(horizontalSpacer, 0, 1, 1, 1);
+        gridLayout_4->addWidget(timeLine, 1, 0, 1, 1);
 
-        widgetClearBtn = new QWidget(widgetSniffer);
-        widgetClearBtn->setObjectName(QString::fromUtf8("widgetClearBtn"));
-        QSizePolicy sizePolicy8(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
-        sizePolicy8.setHorizontalStretch(0);
-        sizePolicy8.setVerticalStretch(0);
-        sizePolicy8.setHeightForWidth(widgetClearBtn->sizePolicy().hasHeightForWidth());
-        widgetClearBtn->setSizePolicy(sizePolicy8);
-        widgetClearBtn->setMinimumSize(QSize(0, 0));
-        widgetClearBtn->setStyleSheet(QString::fromUtf8("font: 75 15pt \"C059\";"));
-        verticalLayout = new QVBoxLayout(widgetClearBtn);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        clrB = new QPushButton(widgetClearBtn);
-        clrB->setObjectName(QString::fromUtf8("clrB"));
-        sizePolicy7.setHeightForWidth(clrB->sizePolicy().hasHeightForWidth());
-        clrB->setSizePolicy(sizePolicy7);
-        clrB->setCursor(QCursor(Qt::PointingHandCursor));
-        clrB->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
+        label_2 = new QLabel(widget_4);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setStyleSheet(QString::fromUtf8("color: rgb(243, 243, 243);"));
 
-        verticalLayout->addWidget(clrB);
-
-        clrF = new QPushButton(widgetClearBtn);
-        clrF->setObjectName(QString::fromUtf8("clrF"));
-        sizePolicy7.setHeightForWidth(clrF->sizePolicy().hasHeightForWidth());
-        clrF->setSizePolicy(sizePolicy7);
-        clrF->setCursor(QCursor(Qt::PointingHandCursor));
-        clrF->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
-
-        verticalLayout->addWidget(clrF);
-
-        clrT = new QPushButton(widgetClearBtn);
-        clrT->setObjectName(QString::fromUtf8("clrT"));
-        sizePolicy7.setHeightForWidth(clrT->sizePolicy().hasHeightForWidth());
-        clrT->setSizePolicy(sizePolicy7);
-        clrT->setCursor(QCursor(Qt::PointingHandCursor));
-        clrT->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
-
-        verticalLayout->addWidget(clrT);
+        gridLayout_4->addWidget(label_2, 1, 1, 1, 1);
 
 
-        gridLayout_2->addWidget(widgetClearBtn, 2, 2, 1, 1);
+        gridLayout_2->addWidget(widget_4, 2, 0, 1, 1);
 
         stopBtn = new QToolButton(widgetSniffer);
         stopBtn->setObjectName(QString::fromUtf8("stopBtn"));
@@ -276,7 +242,82 @@ public:
         stopBtn->setCursor(QCursor(Qt::PointingHandCursor));
         stopBtn->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
 
-        gridLayout_2->addWidget(stopBtn, 1, 2, 1, 1);
+        gridLayout_2->addWidget(stopBtn, 2, 2, 1, 1);
+
+        widget_3 = new QWidget(widgetSniffer);
+        widget_3->setObjectName(QString::fromUtf8("widget_3"));
+        QSizePolicy sizePolicy7(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy7.setHorizontalStretch(0);
+        sizePolicy7.setVerticalStretch(0);
+        sizePolicy7.setHeightForWidth(widget_3->sizePolicy().hasHeightForWidth());
+        widget_3->setSizePolicy(sizePolicy7);
+        verticalLayout_4 = new QVBoxLayout(widget_3);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        label_8 = new QLabel(widget_3);
+        label_8->setObjectName(QString::fromUtf8("label_8"));
+        sizePolicy5.setHeightForWidth(label_8->sizePolicy().hasHeightForWidth());
+        label_8->setSizePolicy(sizePolicy5);
+        label_8->setStyleSheet(QString::fromUtf8("color: rgb(255,255,243);"));
+
+        verticalLayout_4->addWidget(label_8);
+
+        filterLine = new QLineEdit(widget_3);
+        filterLine->setObjectName(QString::fromUtf8("filterLine"));
+        QSizePolicy sizePolicy8(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy8.setHorizontalStretch(0);
+        sizePolicy8.setVerticalStretch(0);
+        sizePolicy8.setHeightForWidth(filterLine->sizePolicy().hasHeightForWidth());
+        filterLine->setSizePolicy(sizePolicy8);
+        filterLine->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 243);\n"
+"background-color: rgb(51, 51, 51);"));
+        filterLine->setMaxLength(20);
+        filterLine->setCursorPosition(0);
+
+        verticalLayout_4->addWidget(filterLine);
+
+
+        gridLayout_2->addWidget(widget_3, 3, 0, 1, 1);
+
+        widgetClearBtn = new QWidget(widgetSniffer);
+        widgetClearBtn->setObjectName(QString::fromUtf8("widgetClearBtn"));
+        QSizePolicy sizePolicy9(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+        sizePolicy9.setHorizontalStretch(0);
+        sizePolicy9.setVerticalStretch(0);
+        sizePolicy9.setHeightForWidth(widgetClearBtn->sizePolicy().hasHeightForWidth());
+        widgetClearBtn->setSizePolicy(sizePolicy9);
+        widgetClearBtn->setMinimumSize(QSize(0, 0));
+        widgetClearBtn->setStyleSheet(QString::fromUtf8("font: 75 15pt \"C059\";"));
+        verticalLayout = new QVBoxLayout(widgetClearBtn);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        clrB = new QPushButton(widgetClearBtn);
+        clrB->setObjectName(QString::fromUtf8("clrB"));
+        sizePolicy3.setHeightForWidth(clrB->sizePolicy().hasHeightForWidth());
+        clrB->setSizePolicy(sizePolicy3);
+        clrB->setCursor(QCursor(Qt::PointingHandCursor));
+        clrB->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
+
+        verticalLayout->addWidget(clrB);
+
+        clrF = new QPushButton(widgetClearBtn);
+        clrF->setObjectName(QString::fromUtf8("clrF"));
+        sizePolicy3.setHeightForWidth(clrF->sizePolicy().hasHeightForWidth());
+        clrF->setSizePolicy(sizePolicy3);
+        clrF->setCursor(QCursor(Qt::PointingHandCursor));
+        clrF->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
+
+        verticalLayout->addWidget(clrF);
+
+        clrT = new QPushButton(widgetClearBtn);
+        clrT->setObjectName(QString::fromUtf8("clrT"));
+        sizePolicy3.setHeightForWidth(clrT->sizePolicy().hasHeightForWidth());
+        clrT->setSizePolicy(sizePolicy3);
+        clrT->setCursor(QCursor(Qt::PointingHandCursor));
+        clrT->setStyleSheet(QString::fromUtf8("color: rgb(224, 227, 218);"));
+
+        verticalLayout->addWidget(clrT);
+
+
+        gridLayout_2->addWidget(widgetClearBtn, 3, 2, 1, 1);
 
 
         gridLayout->addWidget(widgetSniffer, 0, 2, 1, 1);
@@ -287,11 +328,11 @@ public:
         gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
         widget = new QWidget(widgetStatus_2);
         widget->setObjectName(QString::fromUtf8("widget"));
-        QSizePolicy sizePolicy9(QSizePolicy::Fixed, QSizePolicy::Minimum);
-        sizePolicy9.setHorizontalStretch(0);
-        sizePolicy9.setVerticalStretch(0);
-        sizePolicy9.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
-        widget->setSizePolicy(sizePolicy9);
+        QSizePolicy sizePolicy10(QSizePolicy::Fixed, QSizePolicy::Minimum);
+        sizePolicy10.setHorizontalStretch(0);
+        sizePolicy10.setVerticalStretch(0);
+        sizePolicy10.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
+        widget->setSizePolicy(sizePolicy10);
         widget->setMinimumSize(QSize(10, 0));
         widget->setLayoutDirection(Qt::RightToLeft);
         widget->setStyleSheet(QString::fromUtf8(""));
@@ -352,15 +393,18 @@ public:
     {
         Widget->setWindowTitle(QCoreApplication::translate("Widget", "Von's Sniffer", nullptr));
         label->setText(QCoreApplication::translate("Widget", "\347\212\266\346\200\201 ", nullptr));
-        label_8->setText(QCoreApplication::translate("Widget", "\350\257\267\350\276\223\345\205\245\350\277\207\346\273\244\350\247\204\345\210\231\357\274\232", nullptr));
-        filterLine->setText(QString());
+        startBtn->setText(QCoreApplication::translate("Widget", "START", nullptr));
         label_4->setText(QCoreApplication::translate("Widget", "\350\257\267\350\276\223\345\205\245\346\212\223\345\214\205\346\225\260\351\207\217\357\274\232\357\274\210\351\273\230\350\256\244\345\276\252\347\216\257\346\212\223\345\217\226\357\274\211", nullptr));
         inputLineEdit->setText(QString());
-        startBtn->setText(QCoreApplication::translate("Widget", "START", nullptr));
+        label_9->setText(QCoreApplication::translate("Widget", "\350\257\267\350\276\223\345\205\245\347\255\211\345\276\205\346\227\266\351\227\264\357\274\232\357\274\210\351\273\230\350\256\244\346\214\201\347\273\255\347\255\211\345\276\205\357\274\211", nullptr));
+        timeLine->setText(QString());
+        label_2->setText(QCoreApplication::translate("Widget", "ms", nullptr));
+        stopBtn->setText(QCoreApplication::translate("Widget", "STOP", nullptr));
+        label_8->setText(QCoreApplication::translate("Widget", "\350\257\267\350\276\223\345\205\245\350\277\207\346\273\244\350\247\204\345\210\231\357\274\232", nullptr));
+        filterLine->setText(QString());
         clrB->setText(QCoreApplication::translate("Widget", "clear status screen", nullptr));
         clrF->setText(QCoreApplication::translate("Widget", "clear flow table", nullptr));
         clrT->setText(QCoreApplication::translate("Widget", "clear packet info screen", nullptr));
-        stopBtn->setText(QCoreApplication::translate("Widget", "STOP", nullptr));
         label_6->setText(QCoreApplication::translate("Widget", "Bytes", nullptr));
         label_7->setText(QCoreApplication::translate("Widget", "\346\200\273\346\265\201\351\207\217\357\274\232", nullptr));
         label_5->setText(QCoreApplication::translate("Widget", "\346\265\201\351\207\217\347\273\237\350\256\241", nullptr));
